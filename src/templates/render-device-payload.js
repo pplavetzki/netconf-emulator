@@ -45,24 +45,28 @@ export function renderDevicePayload(payload, device) {
     xml = xml.replace(/<product-model>[\s\S]*?<\/product-model>/g, `<product-model>${escapeXml(device.model.toLowerCase())}</product-model>`);
   }
 
-  // Canonical serial substitutions used by chassis templates.
+  // Explicit placeholders keep captured templates readable while making
+  // device-specific substitutions unambiguous.
   if (device.chassisSerial) {
-    xml = xml.replace(/<serial-number>BK378<\/serial-number>/g, `<serial-number>${escapeXml(device.chassisSerial)}</serial-number>`);
-    xml = xml.replace(/S\/N\s+BK378/g, `S/N ${escapeXml(device.chassisSerial)}`);
-    xml = xml.replace(/>42 4b 33 37 38 /g, `>${escapeXml(hexBytes(device.chassisSerial))} `);
+    xml = xml
+      .replace(/__CHASSIS_SERIAL__/g, escapeXml(device.chassisSerial))
+      .replace(/__CHASSIS_SERIAL_HEX__/g, escapeXml(hexBytes(device.chassisSerial)));
   }
 
   if (device.cbSerial) {
-    xml = xml.replace(/<serial-number>CAKV2080<\/serial-number>/g, `<serial-number>${escapeXml(device.cbSerial)}</serial-number>`);
-    xml = xml.replace(/S\/N\s+CAKV2080/g, `S/N ${escapeXml(device.cbSerial)}`);
+    xml = xml
+      .replace(/__CB_SERIAL__/g, escapeXml(device.cbSerial))
+      .replace(/__CB_SERIAL_HEX__/g, escapeXml(hexBytes(device.cbSerial)));
   }
 
   if (device.xcvrSerial) {
-    xml = xml.replace(/<serial-number>UUJ01CF<\/serial-number>/g, `<serial-number>${escapeXml(device.xcvrSerial)}</serial-number>`);
+    xml = xml.replace(/__XCVR_SERIAL__/g, escapeXml(device.xcvrSerial));
   }
 
   if (device.pemSerial) {
-    xml = xml.replace(/<serial-number>1F188120484<\/serial-number>/g, `<serial-number>${escapeXml(device.pemSerial)}</serial-number>`);
+    xml = xml
+      .replace(/__PEM_SERIAL__/g, escapeXml(device.pemSerial))
+      .replace(/__PEM_SERIAL_HEX__/g, escapeXml(hexBytes(device.pemSerial)));
   }
 
   return xml;

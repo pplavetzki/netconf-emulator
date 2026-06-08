@@ -26,6 +26,10 @@ function alnum(rng, len) {
   return s;
 }
 
+function stableSerialFromId(id) {
+  return `BK${Buffer.from(id).toString('hex').toUpperCase()}`;
+}
+
 // Build the immutable state for one device. Only the fields that legitimately
 // vary between physical devices are randomized; everything structural is left
 // to the template as constant content.
@@ -36,7 +40,7 @@ export function deriveDevice(id) {
     hostname: id, // e.g. device-00142
     model: 'MX204',
     version: JUNOS_VERSION,
-    chassisSerial: `BK${rng() % 1000}`.padEnd(5, '0').slice(0, 5),
+    chassisSerial: stableSerialFromId(id),
     cbSerial: alnum(rng, 8),
     xcvrSerial: alnum(rng, 7),
     pemSerial: `1F${rng() % 1_000_000_000}`.slice(0, 11),
