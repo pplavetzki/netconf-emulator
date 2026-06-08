@@ -4,7 +4,7 @@ import ssh2 from 'ssh2';
 //   node cli.js [--host H] [--port P] [--user U] [--pass X]
 //               [--mode pipelined|sequential]
 //               [--rpc get-chassis-inventory ... ]   (one or more RPC op names)
-//   Default: 10x get-chassis-inventory, pipelined.
+//   Default: sends the full mapped RPC set once, pipelined.
 //
 // Tests the "N commands per connection" pattern your app uses. Pipelined fires
 // all RPCs without waiting (max concurrency on one session); sequential waits
@@ -35,7 +35,30 @@ const USER = arg('user', 'admin');
 const PASS = arg('pass', 'x');
 const MODE = arg('mode', 'pipelined');
 let RPCS = args('rpc');
-if (RPCS.length === 0) RPCS = Array(10).fill('get-chassis-inventory');
+const DEFAULT_RPCS = [
+  'get-chassis-inventory',
+  'get-route-engine-information',
+  'get-interface-information><terse/><interface-name>lo0.0</interface-name></get-interface-information',
+  'get-software-information',
+  'get-system-information',
+  'get-alarm-information',
+  'get-interface-information><descriptions/></get-interface-information',
+  'get-commit-information',
+  'get-chassis-inventory><extensive/></get-chassis-inventory',
+  'get-interface-information><terse/></get-interface-information',
+  'get-system-core-dumps',
+  'get-system-uptime-information',
+  'get-ospf-neighbor-information',
+  'get-isis-adjacency-information',
+  'get-fpc-information',
+  'get-rsvp-neighbor-information',
+  'get-vrrp-information><detail/></get-vrrp-information',
+  'get-buffer-informations',
+  'get-bgp-summary-information',
+  'get-license-summary-information',
+  'file-list><style>detail</style><path>/var/log/</path></file-list',
+];
+if (RPCS.length === 0) RPCS = DEFAULT_RPCS;
 
 const rpcXml = (op, id) =>
   `<rpc message-id="${id}" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><${op}/></rpc>`;
