@@ -1,0 +1,43 @@
+import { renderDevicePayload } from './render-device-payload.js';
+
+// Generated from mock_responses/get-system-uptime-information.xml
+const PAYLOAD = String.raw`<multi-routing-engine-results>
+
+  <multi-routing-engine-item>
+
+    <re-name>fpc0</re-name>
+
+    <system-uptime-information xmlns="http://xml.juniper.net/junos/15.1R5/junos">
+      <current-time>
+        <date-time junos:seconds="1760382225">2025-10-13 12:03:45 PDT</date-time>
+      </current-time>
+      <time-source> LOCAL CLOCK </time-source>
+      <system-booted-time>
+        <date-time junos:seconds="1752004158">2025-07-08 12:49:18 PDT</date-time>
+        <time-length junos:seconds="8378067">13w5d 23:14</time-length>
+      </system-booted-time>
+      <protocols-started-time>
+        <date-time junos:seconds="1752004331">2025-07-08 12:52:11 PDT</date-time>
+        <time-length junos:seconds="8377894">13w5d 23:11</time-length>
+      </protocols-started-time>
+      <last-configured-time>
+        <date-time junos:seconds="1753987146">2025-07-31 11:39:06 PDT</date-time>
+        <time-length junos:seconds="6395079">10w4d 00:24</time-length>
+        <user>jalapeno</user>
+      </last-configured-time>
+      <uptime-information>
+        <date-time junos:seconds="1760382225">12:03PM</date-time>
+        <up-time junos:seconds="8378097">96 days, 23:14</up-time>
+        <active-user-count junos:format="1 user">1</active-user-count>
+        <load-average-1>0.09</load-average-1>
+        <load-average-5>0.04</load-average-5>
+        <load-average-15>0.01</load-average-15>
+      </uptime-information>
+    </system-uptime-information>
+  </multi-routing-engine-item>
+
+</multi-routing-engine-results>`;
+
+export function getSystemUptimeInformation(device) {
+  return renderDevicePayload(PAYLOAD, device);
+}

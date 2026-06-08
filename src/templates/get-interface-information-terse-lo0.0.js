@@ -1,0 +1,23 @@
+import { renderDevicePayload } from './render-device-payload.js';
+
+// Generated from mock_responses/get-interface-information-terse-lo0.0.xml
+const PAYLOAD = String.raw`<interface-information xmlns="http://xml.juniper.net/junos/15.1R6/junos-interface" junos:style="terse">
+  <logical-interface>
+    <name>lo0.0</name>
+    <admin-status>up</admin-status>
+    <oper-status>up</oper-status>
+    <filter-information>
+    </filter-information>
+    <address-family>
+      <address-family-name>inet</address-family-name>
+      <interface-address>
+        <ifa-local>192.168.26.4</ifa-local>
+        <ifa-destination junos:emit="emit">0/0</ifa-destination>
+      </interface-address>
+    </address-family>
+  </logical-interface>
+</interface-information>`;
+
+export function getInterfaceInformationTerseLo00(device) {
+  return renderDevicePayload(PAYLOAD, device);
+}

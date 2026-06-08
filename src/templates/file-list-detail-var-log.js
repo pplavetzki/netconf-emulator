@@ -1,0 +1,1080 @@
+import { renderDevicePayload } from './render-device-payload.js';
+
+// Generated from mock_responses/file-list-detail-var-log.xml
+const PAYLOAD = String.raw`<directory-list root-path="/var/log" junos:seconds="1760376912" junos:style="verbose">
+  <directory name="/var/log">
+    <directory-name>/var/log</directory-name>
+    <total-file-blocks>687168</total-file-blocks>
+    <file-information>
+      <file-name>__policy_names_rpdc__</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2537</file-size>
+      <file-date junos:format="May 9  08:43">1746805421</file-date>
+    </file-information>
+    <file-information>
+      <file-name>__policy_names_rpdn__</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>1996</file-size>
+      <file-date junos:format="May 9  08:43">1746805422</file-date>
+    </file-information>
+    <file-information>
+      <file-name>aprobed</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Sep 14  2018">1536951433</file-date>
+    </file-information>
+    <file-information>
+      <file-name>apsd</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>13408</file-size>
+      <file-date junos:format="May 9  08:38">1746805124</file-date>
+    </file-information>
+    <file-information>
+      <file-name>authd_libstats</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Jun 28  2021">1624902062</file-date>
+    </file-information>
+    <file-information>
+      <file-name>authd_profilelib</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Jun 28  2021">1624902062</file-date>
+    </file-information>
+    <file-information>
+      <file-name>authd_sdb.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Jun 28  2021">1624902062</file-date>
+    </file-information>
+    <file-information>
+      <file-name>bbesmgd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Apr 22  2018">1524416796</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>248410</file-size>
+      <file-date junos:format="Oct 13 10:35">1760376912</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.0.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116943</file-size>
+      <file-date junos:format="Oct 13 09:36">1760373393</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.1.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116885</file-size>
+      <file-date junos:format="Oct 12 21:56">1760331411</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.2.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116644</file-size>
+      <file-date junos:format="Oct 12 10:16">1760289388</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.3.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116966</file-size>
+      <file-date junos:format="Oct 11 22:36">1760247384</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.4.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116832</file-size>
+      <file-date junos:format="Oct 11 10:56">1760205402</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.5.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116790</file-size>
+      <file-date junos:format="Oct 10 23:16">1760163378</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.6.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116969</file-size>
+      <file-date junos:format="Oct 10 11:36">1760121373</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.7.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116823</file-size>
+      <file-date junos:format="Oct 9  23:56">1760079386</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd.8.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>116771</file-size>
+      <file-date junos:format="Oct 9  12:16">1760037362</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd_snmp</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2799347</file-size>
+      <file-date junos:format="Oct 13 10:10">1760375409</file-date>
+    </file-information>
+    <file-information>
+      <file-name>chassisd_snmp.0.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>172561</file-size>
+      <file-date junos:format="Oct 16  2022">1665984202</file-date>
+    </file-information>
+    <file-information>
+      <file-name>cosd</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>267097</file-size>
+      <file-date junos:format="May 9  08:41">1746805306</file-date>
+    </file-information>
+    <file-information>
+      <file-name>coslib_ifinfo</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Sep 6   2018">1536280697</file-date>
+    </file-information>
+    <file-information>
+      <file-name>cscript.log</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>111218</file-size>
+      <file-date junos:format="Aug 25 11:21">1756146098</file-date>
+    </file-information>
+    <file-information>
+      <file-name>dcd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>956453</file-size>
+      <file-date junos:format="May 9  08:41">1746805306</file-date>
+    </file-information>
+    <file-information>
+      <file-name>dcd_commit_check</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>48653</file-size>
+      <file-date junos:format="May 9  08:38">1746805121</file-date>
+    </file-information>
+    <file-information>
+      <file-name>dfwc</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Apr 22  2018">1524416796</file-date>
+    </file-information>
+    <file-information>
+      <file-name>eccd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>1176</file-size>
+      <file-date junos:format="May 5  10:11">1746465067</file-date>
+    </file-information>
+    <file-information>
+      <file-name>escript.log</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>123662</file-size>
+      <file-date junos:format="Oct 13 10:35">1760376911</file-date>
+    </file-information>
+    <file-information>
+      <file-name>escript.log.0.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>6677</file-size>
+      <file-date junos:format="Oct 12 21:50">1760331009</file-date>
+    </file-information>
+    <file-information>
+      <file-name>escript.log.1.gz</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>6676</file-size>
+      <file-date junos:format="Oct 12 08:10">1760281808</file-date>
+    </file-information>
+    <file-information>
+      <file-name>ext</file-name>
+      <file-directory junos:format="/"/>
+      <file-permissions junos:format="drwxrwxr-x">775</file-permissions>
+      <file-owner>ext</file-owner>
+      <file-group>ext</file-group>
+      <file-links>2</file-links>
+      <file-size>512</file-size>
+      <file-date junos:format="Sep 14  2018">1536951382</file-date>
+    </file-information>
+    <file-information>
+      <file-name>flowc</file-name>
+      <file-directory junos:format="/"/>
+      <file-permissions junos:format="drwxrwxrwt">777</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>3</file-links>
+      <file-size>512</file-size>
+      <file-date junos:format="Sep 14  2018">1536951382</file-date>
+    </file-information>
+    <file-information>
+      <file-name>fpc_poweron_seq.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2</file-size>
+      <file-date junos:format="May 9  08:41">1746805289</file-date>
+    </file-information>
+    <file-information>
+      <file-name>gatekeeper</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>198</file-size>
+      <file-date junos:format="Jun 12  2018">1528870748</file-date>
+    </file-information>
+    <file-information>
+      <file-name>ggsn</file-name>
+      <file-directory junos:format="/"/>
+      <file-permissions junos:format="drwxrwxrwt">777</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>3</file-links>
+      <file-size>512</file-size>
+      <file-date junos:format="Sep 14  2018">1536951382</file-date>
+    </file-information>
+    <file-information>
+      <file-name>gres-test-point</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>35802</file-size>
+      <file-date junos:format="May 5  10:11">1746465073</file-date>
+    </file-information>
+    <file-information>
+      <file-name>ifstraced</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>3660</file-size>
+      <file-date junos:format="May 9  08:38">1746805124</file-date>
+    </file-information>
+    <file-information>
+      <file-name>install</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>30744</file-size>
+      <file-date junos:format="Jun 9   2021">1623296800</file-date>
+    </file-information>
+    <file-information>
+      <file-name>install.0.gz</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>4145</file-size>
+      <file-date junos:format="Aug 11  2020">1597170962</file-date>
+    </file-information>
+    <file-information>
+      <file-name>install.1.gz</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>703</file-size>
+      <file-date junos:format="Mar 25  2019">1553528161</file-date>
+    </file-information>
+    <file-information>
+      <file-name>install.2.gz</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>3965</file-size>
+      <file-date junos:format="Sep 14  2018">1536951242</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>688209</file-size>
+      <file-date junos:format="Oct 13 10:35">1760376912</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.0.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45481</file-size>
+      <file-date junos:format="Oct 13 02:15">1760346900</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.1.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45501</file-size>
+      <file-date junos:format="Oct 12 14:15">1760303700</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.2.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45344</file-size>
+      <file-date junos:format="Oct 12 02:15">1760260500</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.3.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45561</file-size>
+      <file-date junos:format="Oct 11 14:15">1760217300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.4.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45364</file-size>
+      <file-date junos:format="Oct 11 02:15">1760174100</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.5.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45186</file-size>
+      <file-date junos:format="Oct 10 14:15">1760130900</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.6.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45369</file-size>
+      <file-date junos:format="Oct 10 02:15">1760087700</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.7.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45327</file-size>
+      <file-date junos:format="Oct 9  14:15">1760044500</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.8.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>45377</file-size>
+      <file-date junos:format="Oct 9  02:15">1760001300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>interactive-commands.9.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>46604</file-size>
+      <file-date junos:format="Oct 8  14:15">1759958100</file-date>
+    </file-information>
+    <file-information>
+      <file-name>internal-snapshot-logs</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>880</file-size>
+      <file-date junos:format="May 5  10:13">1746465185</file-date>
+    </file-information>
+    <file-information>
+      <file-name>inventory</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>41270</file-size>
+      <file-date junos:format="May 9  08:39">1746805150</file-date>
+    </file-information>
+    <file-information>
+      <file-name>ipfd</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>401745</file-size>
+      <file-date junos:format="May 9  08:38">1746805124</file-date>
+    </file-information>
+    <file-information>
+      <file-name>ipfd_chk_only</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>136</file-size>
+      <file-date junos:format="May 9  08:38">1746805122</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_chassisd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>6038</file-size>
+      <file-date junos:format="May 9  08:38">1746805121</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_clksyncd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Apr 22  2018">1524416796</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_cosd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2848</file-size>
+      <file-date junos:format="Jun 9   2021">1623277835</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_dcd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>528</file-size>
+      <file-date junos:format="Jan 6   2020">1578330837</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_dfwd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>4356</file-size>
+      <file-date junos:format="Jan 6   2020">1578330840</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_l2ald</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>6680</file-size>
+      <file-date junos:format="May 5  10:11">1746465067</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jam_tnp.bootpd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Sep 14  2018">1536951432</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jddosd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>910</file-size>
+      <file-date junos:format="Jul 10  2023">1689022136</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jinsightd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Aug 11  2020">1597171186</file-date>
+    </file-information>
+    <file-information>
+      <file-name>jsqlsyncd_log.txt</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>6696</file-size>
+      <file-date junos:format="May 5  10:11">1746465065</file-date>
+    </file-information>
+    <file-information>
+      <file-name>license</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Jun 12  2018">1528870114</file-date>
+    </file-information>
+    <file-information>
+      <file-name>license_subs_trace.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>29515</file-size>
+      <file-date junos:format="May 5  10:12">1746465151</file-date>
+    </file-information>
+    <file-information>
+      <file-name>lmpd</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>3120</file-size>
+      <file-date junos:format="May 9  08:38">1746805122</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mastership</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>26187</file-size>
+      <file-date junos:format="May 5  10:11">1746465069</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>539855</file-size>
+      <file-date junos:format="Oct 13 10:35">1760376907</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.0.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>84816</file-size>
+      <file-date junos:format="Oct 11 09:15">1760199300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.1.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>85112</file-size>
+      <file-date junos:format="Oct 7  15:15">1759875300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.2.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>85101</file-size>
+      <file-date junos:format="Oct 4  02:15">1759569300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.3.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>84155</file-size>
+      <file-date junos:format="Sep 30 15:15">1759270500</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.4.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>84187</file-size>
+      <file-date junos:format="Sep 27 04:30">1758972600</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.5.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>83273</file-size>
+      <file-date junos:format="Sep 23 17:30">1758673800</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.6.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>84855</file-size>
+      <file-date junos:format="Sep 19 09:45">1758300300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.7.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>85216</file-size>
+      <file-date junos:format="Sep 15 21:30">1757997000</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.8.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>84825</file-size>
+      <file-date junos:format="Sep 13 07:45">1757774700</file-date>
+    </file-information>
+    <file-information>
+      <file-name>messages.9.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>85411</file-size>
+      <file-date junos:format="Sep 10 23:15">1757571300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mgd-api</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Jun 12  2018">1528870115</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mqtt_broker_chassis.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>daemon</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>161690690</file-size>
+      <file-date junos:format="Aug 11  2020">1597170963</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mqtt_broker_chassis.log.0.gz</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>daemon</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>8510693</file-size>
+      <file-date junos:format="Mar 25  2019">1553528295</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mqtt_broker_lchassis.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>daemon</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>161690416</file-size>
+      <file-date junos:format="Aug 11  2020">1597170963</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mqtt_broker_lchassis.log.0.gz</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>daemon</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>8510671</file-size>
+      <file-date junos:format="Mar 25  2019">1553528295</file-date>
+    </file-information>
+    <file-information>
+      <file-name>mqtt_broker_re.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>daemon</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2437</file-size>
+      <file-date junos:format="Aug 11  2020">1597170963</file-date>
+    </file-information>
+    <file-information>
+      <file-name>na-grpcd</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>468385</file-size>
+      <file-date junos:format="May 5  10:11">1746465094</file-date>
+    </file-information>
+    <file-information>
+      <file-name>net-monitord-log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Oct 29  2020">1603971350</file-date>
+    </file-information>
+    <file-information>
+      <file-name>ntf-agent.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>8553</file-size>
+      <file-date junos:format="May 9  08:38">1746805124</file-date>
+    </file-information>
+    <file-information>
+      <file-name>pfe_flow_stats.txt</file-name>
+      <file-permissions junos:format="-rw-rw-rw-">666</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>1029</file-size>
+      <file-date junos:format="May 9  08:41">1746805294</file-date>
+    </file-information>
+    <file-information>
+      <file-name>pfe_flow_stats.txt.0</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>50</file-size>
+      <file-date junos:format="Sep 14  2018">1536951595</file-date>
+    </file-information>
+    <file-information>
+      <file-name>pm_longterm.txt</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>253448</file-size>
+      <file-date junos:format="Apr 22  2018">1524416797</file-date>
+    </file-information>
+    <file-information>
+      <file-name>rtspd</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2932</file-size>
+      <file-date junos:format="May 9  08:38">1746805124</file-date>
+    </file-information>
+    <file-information>
+      <file-name>shmlog</file-name>
+      <file-directory junos:format="/"/>
+      <file-permissions junos:format="drwxr-xr-x">755</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>20</file-links>
+      <file-size>1024</file-size>
+      <file-date junos:format="Jun 30  2021">1625122046</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_auth_log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>459</file-size>
+      <file-date junos:format="May 5  10:11">1746465073</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>286505</file-size>
+      <file-date junos:format="Oct 13 10:35">1760376912</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.0.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>49140</file-size>
+      <file-date junos:format="Oct 13 07:15">1760364900</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.1.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>49581</file-size>
+      <file-date junos:format="Oct 12 20:00">1760324400</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.2.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>48953</file-size>
+      <file-date junos:format="Oct 12 08:15">1760282100</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.3.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>49666</file-size>
+      <file-date junos:format="Oct 11 21:00">1760241600</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.4.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>48979</file-size>
+      <file-date junos:format="Oct 11 09:15">1760199300</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.5.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>49731</file-size>
+      <file-date junos:format="Oct 10 22:00">1760158800</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.6.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>48576</file-size>
+      <file-date junos:format="Oct 10 10:15">1760116500</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.7.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>49571</file-size>
+      <file-date junos:format="Oct 9  23:00">1760076000</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.8.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>48882</file-size>
+      <file-date junos:format="Oct 9  11:15">1760033700</file-date>
+    </file-information>
+    <file-information>
+      <file-name>telmex_test.9.gz</file-name>
+      <file-permissions junos:format="-rw-rw----">660</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>49566</file-size>
+      <file-date junos:format="Oct 9  00:00">1759993200</file-date>
+    </file-information>
+    <file-information>
+      <file-name>utx.lastlogin</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>1576</file-size>
+      <file-date junos:format="Oct 13 10:32">1760376757</file-date>
+    </file-information>
+    <file-information>
+      <file-name>utx.log</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>61113</file-size>
+      <file-date junos:format="Oct 13 10:32">1760376757</file-date>
+    </file-information>
+    <file-information>
+      <file-name>vmhost</file-name>
+      <file-permissions junos:format="-rw-rw-rw-">666</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>2873</file-size>
+      <file-date junos:format="May 5  10:11">1746465072</file-date>
+    </file-information>
+    <file-information>
+      <file-name>vmhost_host_app_alarm_failed_daemons</file-name>
+      <file-permissions junos:format="-rw-r--r--">644</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="May 5  10:11">1746465067</file-date>
+    </file-information>
+    <file-information>
+      <file-name>wtmp</file-name>
+      <file-permissions junos:format="-rw-rw-r--">664</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Oct 10 18:45">1760147100</file-date>
+    </file-information>
+    <file-information>
+      <file-name>wtmp.0.gz</file-name>
+      <file-permissions junos:format="-rw-rw-r--">664</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>27</file-size>
+      <file-date junos:format="Oct 10 18:30">1760146200</file-date>
+    </file-information>
+    <file-information>
+      <file-name>wtmp.1.gz</file-name>
+      <file-permissions junos:format="-rw-rw-r--">664</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>27</file-size>
+      <file-date junos:format="Sep 10 19:15">1757556900</file-date>
+    </file-information>
+    <file-information>
+      <file-name>wtmp.2.gz</file-name>
+      <file-permissions junos:format="-rw-rw-r--">664</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>27</file-size>
+      <file-date junos:format="Sep 10 19:00">1757556000</file-date>
+    </file-information>
+    <file-information>
+      <file-name>wtmp.3.gz</file-name>
+      <file-permissions junos:format="-rw-rw-r--">664</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>27</file-size>
+      <file-date junos:format="Aug 11 19:45">1754966700</file-date>
+    </file-information>
+    <file-information>
+      <file-name>wtmp.4.gz</file-name>
+      <file-permissions junos:format="-rw-rw-r--">664</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>27</file-size>
+      <file-date junos:format="Aug 11 19:30">1754965800</file-date>
+    </file-information>
+    <file-information>
+      <file-name>xmlproxyd</file-name>
+      <file-permissions junos:format="-rw-r-----">640</file-permissions>
+      <file-owner>root</file-owner>
+      <file-group>wheel</file-group>
+      <file-links>1</file-links>
+      <file-size>0</file-size>
+      <file-date junos:format="Mar 25  2019">1553528290</file-date>
+    </file-information>
+    <total-files>114</total-files>
+  </directory>
+</directory-list>`;
+
+export function fileListDetailVarLog(device) {
+  return renderDevicePayload(PAYLOAD, device);
+}

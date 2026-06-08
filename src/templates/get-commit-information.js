@@ -1,0 +1,312 @@
+import { renderDevicePayload } from './render-device-payload.js';
+
+// Generated from mock_responses/get-commit-information.xml
+const PAYLOAD = String.raw`<commit-information>
+  <commit-history>
+    <sequence-number>0</sequence-number>
+    <user>jalapeno</user>
+    <client>netconf</client>
+    <date-time junos:seconds="1756146099">2025-08-25 11:21:39 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>1</sequence-number>
+    <user>jalapeno</user>
+    <client>netconf</client>
+    <date-time junos:seconds="1753987122">2025-07-31 11:38:42 PDT</date-time>
+    <log>NTP server configuration applied by Ansible</log>
+  </commit-history>
+  <commit-history>
+    <sequence-number>2</sequence-number>
+    <user>jalapeno</user>
+    <client>netconf</client>
+    <date-time junos:seconds="1753986833">2025-07-31 11:33:53 PDT</date-time>
+    <log>Configuring NTP server 10.10.16.36</log>
+  </commit-history>
+  <commit-history>
+    <sequence-number>3</sequence-number>
+    <user>jalapeno</user>
+    <client>netconf</client>
+    <date-time junos:seconds="1753986828">2025-07-31 11:33:48 PDT</date-time>
+    <log>Configuring NTP server 10.10.16.4</log>
+  </commit-history>
+  <commit-history>
+    <sequence-number>4</sequence-number>
+    <user>barmstrong</user>
+    <client>cli</client>
+    <date-time junos:seconds="1753205456">2025-07-22 10:30:56 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>5</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1749842487">2025-06-13 12:21:27 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>6</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1746805422">2025-05-09 08:43:42 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>7</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1746805124">2025-05-09 08:38:44 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>8</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1704390201">2024-01-04 09:43:21 PST</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>9</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1689014022">2023-07-10 11:33:42 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>10</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1689003462">2023-07-10 08:37:42 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>11</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1666302644">2022-10-20 14:50:44 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>12</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1666287253">2022-10-20 10:34:13 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>13</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1666192997">2022-10-19 08:23:17 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>14</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1666187083">2022-10-19 06:44:43 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>15</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1666116282">2022-10-18 11:04:42 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>16</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1665417204">2022-10-10 08:53:24 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>17</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1665138234">2022-10-07 03:23:54 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>18</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1665137076">2022-10-07 03:04:36 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>19</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1665097604">2022-10-06 16:06:44 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>20</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1665097511">2022-10-06 16:05:11 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>21</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1664921550">2022-10-04 15:12:30 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>22</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1644354221">2022-02-08 13:03:41 PST</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>23</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1641419703">2022-01-05 13:55:03 PST</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>24</sequence-number>
+    <user>jalapeno</user>
+    <client>cli</client>
+    <date-time junos:seconds="1637599175">2021-11-22 08:39:35 PST</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>25</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625857879">2021-07-09 12:11:19 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>26</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625753715">2021-07-08 07:15:15 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>27</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625753706">2021-07-08 07:15:06 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>28</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625753427">2021-07-08 07:10:27 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>29</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692734">2021-07-07 14:18:54 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>30</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692501">2021-07-07 14:15:01 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>31</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692465">2021-07-07 14:14:25 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>32</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692283">2021-07-07 14:11:23 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>33</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692254">2021-07-07 14:10:54 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>34</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692065">2021-07-07 14:07:45 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>35</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625692004">2021-07-07 14:06:44 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>36</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625691861">2021-07-07 14:04:21 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>37</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625691826">2021-07-07 14:03:46 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>38</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625691790">2021-07-07 14:03:10 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>39</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625691737">2021-07-07 14:02:17 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>40</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625691081">2021-07-07 13:51:21 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>41</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625691046">2021-07-07 13:50:46 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>42</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625689163">2021-07-07 13:19:23 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>43</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625689065">2021-07-07 13:17:45 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>44</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625689037">2021-07-07 13:17:17 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>45</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625688309">2021-07-07 13:05:09 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>46</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625688108">2021-07-07 13:01:48 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>47</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625687799">2021-07-07 12:56:39 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>48</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625686967">2021-07-07 12:42:47 PDT</date-time>
+  </commit-history>
+  <commit-history>
+    <sequence-number>49</sequence-number>
+    <user>root</user>
+    <client>cli</client>
+    <date-time junos:seconds="1625167953">2021-07-01 12:32:33 PDT</date-time>
+  </commit-history>
+</commit-information>`;
+
+export function getCommitInformation(device) {
+  return renderDevicePayload(PAYLOAD, device);
+}

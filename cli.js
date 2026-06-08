@@ -1,0 +1,97 @@
+import ssh2 from 'ssh2';
+
+// Usage:
+//   node cli.js [--host H] [--port P] [--user U] [--pass X]
+//               [--mode pipelined|sequential]
+//               [--rpc get-chassis-inventory ... ]   (one or more RPC op names)
+//   Default: 10x get-chassis-inventory, pipelined.
+//
+// Tests the "N commands per connection" pattern your app uses. Pipelined fires
+// all RPCs without waiting (max concurrency on one session); sequential waits
+// for each reply before sending the next (one outstanding at a time).
+
+const { Client } = ssh2;
+const EOM = ']]>]]>';
+const HELLO = `<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><capabilities>` +
+  `<capability>urn:ietf:params:netconf:base:1.0</capability></capabilities></hello>`;
+
+function arg(name, def) {
+  const i = process.argv.indexOf(`--${name}`);
+  return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : def;
+}
+function args(name) {
+  const out = [];
+  let i = process.argv.indexOf(`--${name}`);
+  while (i !== -1 && process.argv[i + 1] && !process.argv[i + 1].startsWith('--')) {
+    out.push(process.argv[i + 1]);
+    process.argv.splice(i + 1, 1);
+  }
+  return out;
+}
+
+const HOST = arg('host', '127.0.0.1');
+const PORT = Number(arg('port', '8830'));
+const USER = arg('user', 'admin');
+const PASS = arg('pass', 'x');
+const MODE = arg('mode', 'pipelined');
+let RPCS = args('rpc');
+if (RPCS.length === 0) RPCS = Array(10).fill('get-chassis-inventory');
+
+const rpcXml = (op, id) =>
+  `<rpc message-id="${id}" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><${op}/></rpc>`;
+
+const conn = new Client();
+conn.on('ready', () => {
+  conn.subsys('netconf', (err, stream) => {
+    if (err) { console.error('subsystem error:', err.message); process.exit(1); }
+    let buf = '';
+    let sent = 0;
+    let received = 0;
+    let firstReply = null;
+    const t0 = Date.now();
+    const replyIds = [];
+
+    const sendOne = () => {
+      if (sent >= RPCS.length) return;
+      const id = sent + 1;
+      stream.write(rpcXml(RPCS[sent], id) + '\n' + EOM + '\n');
+      sent += 1;
+    };
+
+    stream.on('data', (c) => {
+      buf += c.toString('utf8');
+      let i;
+      while ((i = buf.indexOf(EOM)) !== -1) {
+        const msg = buf.slice(0, i).trim();
+        buf = buf.slice(i + EOM.length);
+        if (!msg) continue;
+
+        if (msg.includes('<hello')) {
+          if (MODE === 'pipelined') {
+            while (sent < RPCS.length) sendOne();
+          } else {
+            sendOne();
+          }
+        } else if (msg.includes('<rpc-reply')) {
+          received += 1;
+          if (!firstReply) firstReply = msg;
+          const idMatch = msg.match(/message-id="([^"]*)"/);
+          const isError = msg.includes('<rpc-error');
+          replyIds.push((idMatch ? idMatch[1] : '?') + (isError ? '!' : ''));
+          if (MODE === 'sequential') sendOne();
+          if (received >= RPCS.length) {
+            const ms = Date.now() - t0;
+            console.log(`mode=${MODE} sent=${sent} received=${received} in ${ms}ms`);
+            console.log(`reply message-ids (arrival order): ${replyIds.join(', ')}  (trailing ! = rpc-error)`);
+            console.log(`\n--- first reply payload ---\n${firstReply}`);
+            conn.end();
+          }
+        }
+      }
+    });
+
+    stream.write(HELLO + '\n' + EOM + '\n');
+  });
+});
+conn.on('error', (e) => { console.error('connection error:', e.message); process.exit(1); });
+conn.connect({ host: HOST, port: PORT, username: USER, password: PASS, readyTimeout: 15000 });

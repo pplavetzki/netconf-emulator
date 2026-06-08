@@ -1,0 +1,31 @@
+import { renderDevicePayload } from './render-device-payload.js';
+
+// Generated from mock_responses/get-license-summary-information.xml
+const PAYLOAD = String.raw`<license-summary-information xmlns="http://xml.juniper.net/junos/20.4R0/junos-license">
+  <license-usage-summary>
+    <features-used/>
+    <feature-summary>
+      <name>scale-subscriber</name>
+      <description>Dynamic/Static Subscriber Base Feature</description>
+      <licensed>10</licensed>
+      <used-licensed>0</used-licensed>
+      <needed>0</needed>
+      <validity-type>permanent</validity-type>
+    </feature-summary>
+    <feature-summary>
+      <name>scale-l2tp</name>
+      <description>L2TP Base Feature</description>
+      <licensed>1000</licensed>
+      <used-licensed>0</used-licensed>
+      <needed>0</needed>
+      <validity-type>permanent</validity-type>
+    </feature-summary>
+  </license-usage-summary>
+  <license-information>
+    <no-licenses-installed/>
+  </license-information>
+</license-summary-information>`;
+
+export function getLicenseSummaryInformation(device) {
+  return renderDevicePayload(PAYLOAD, device);
+}

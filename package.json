@@ -1,0 +1,19 @@
+{
+  "name": "netconf-emulator",
+  "version": "1.0.0",
+  "description": "Read-only Junos NETCONF emulator for scale testing",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:cluster": "node src/cluster.js",
+    "loadtest": "node run-loadtest.js",
+    "sweep": "node sweep.js",
+    "cli": "node cli.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "ssh2": "^1.17.0",
+    "xmlbuilder2": "^4.0.3"
+  }
+}
