@@ -69,3 +69,6 @@ REPLY_MODE=reorder REPLY_DELAY_MIN_MS=2 REPLY_DELAY_MAX_MS=60 npm start
 REPLY_MODE=reorder npm start
 
 node cli.js --mode pipelined
+
+# on the generator box, with Node installed and gen-load.js present:
+HOST=<emulator-ip> PORT=8830 MODE=sequential CONCURRENCY=200 CONNS=2000 GETS=10 node gen-load.js
