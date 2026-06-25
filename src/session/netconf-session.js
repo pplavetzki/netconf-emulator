@@ -15,6 +15,7 @@ import { dispatch } from '../handlers/dispatch.js';
 const ENV_MODE = process.env.REPLY_MODE === 'reorder' ? 'reorder' : 'deterministic';
 const ENV_MIN = Number(process.env.REPLY_DELAY_MIN_MS || 2);
 const ENV_MAX = Number(process.env.REPLY_DELAY_MAX_MS || 40);
+const LOG_LEVEL = process.env.LOG_LEVEL || 'warn'; // info | warn | debug
 
 // Server <hello>. Advertises base:1.0 only, so the client uses EOM framing and
 // we don't have to implement chunked framing in v1. session-id is per-connection.
@@ -44,6 +45,19 @@ function parseRpc(xml) {
   return { messageId, operation };
 }
 
+function snippet(xml, max = 200) {
+  const compact = String(xml).replace(/\s+/g, ' ').trim();
+  return compact.length > max ? `${compact.slice(0, max)}...` : compact;
+}
+
+function shouldLogWarn() {
+  return LOG_LEVEL === 'warn' || LOG_LEVEL === 'debug';
+}
+
+function isDebug() {
+  return LOG_LEVEL === 'debug';
+}
+
 // Wires a NETCONF session onto a duplex stream (the ssh2 channel). `device` is
 // the resolved device for this connection (from destination IP).
 //
@@ -51,6 +65,7 @@ function parseRpc(xml) {
 //   replyMode: 'deterministic' | 'reorder'  (default from REPLY_MODE env)
 //   delayMinMs, delayMaxMs: reorder delay bounds (default from env)
 export function startSession(stream, device, sessionId, opts = {}) {
+  const sid = `s${sessionId}`;
   const replyMode = opts.replyMode || ENV_MODE;
   const delayMin = opts.delayMinMs ?? ENV_MIN;
   const delayMax = opts.delayMaxMs ?? ENV_MAX;
@@ -65,8 +80,24 @@ export function startSession(stream, device, sessionId, opts = {}) {
   // Render a reply payload for one RPC (or an rpc-error). Pure; no I/O.
   const render = (messageId, operation, requestXml) => {
     try {
-      return rpcReply(messageId, dispatch(operation, device, requestXml));
+      const reply = rpcReply(messageId, dispatch(operation, device, requestXml));
+      if (isDebug()) {
+        console.debug(
+          `[netconf] sid=${sid} rpc out device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} status=ok`,
+        );
+      }
+      return reply;
     } catch (err) {
+      if (err?.code === 'UNKNOWN_RPC' && shouldLogWarn()) {
+        console.warn(
+          `[netconf] sid=${sid} unknown operation device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'}`,
+        );
+      }
+      if (isDebug()) {
+        console.debug(
+          `[netconf] sid=${sid} rpc out device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} status=error message="${err.message}"`,
+        );
+      }
       return rpcError(messageId, err.message);
     }
   };
@@ -103,7 +134,17 @@ export function startSession(stream, device, sessionId, opts = {}) {
       // <close-session> -> ok, then end once any delayed replies have flushed.
       if (trimmed.includes('<close-session')) {
         const { messageId } = parseRpc(trimmed);
+        if (isDebug()) {
+          console.debug(
+            `[netconf] sid=${sid} rpc in device=${device.id} message-id=${messageId ?? 'missing'} operation=close-session payload="${snippet(trimmed)}"`,
+          );
+        }
         emit(rpcReply(messageId, '<ok/>'));
+        if (isDebug()) {
+          console.debug(
+            `[netconf] sid=${sid} rpc out device=${device.id} message-id=${messageId ?? 'missing'} operation=close-session status=ok`,
+          );
+        }
         closeRequested = true;
         // In deterministic mode there are no pending replies, so end now.
         if (replyMode !== 'reorder' || pendingReplies === 0) stream.end();
@@ -111,6 +152,16 @@ export function startSession(stream, device, sessionId, opts = {}) {
       }
 
       const { messageId, operation } = parseRpc(trimmed);
+      if (isDebug()) {
+        console.debug(
+          `[netconf] sid=${sid} rpc in device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} payload="${snippet(trimmed)}"`,
+        );
+      }
+      if ((!messageId || !operation) && shouldLogWarn()) {
+        console.warn(
+          `[netconf] sid=${sid} malformed rpc device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} payload="${snippet(trimmed)}"`,
+        );
+      }
       emit(render(messageId, operation, trimmed));
     }
   });

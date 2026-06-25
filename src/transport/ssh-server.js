@@ -27,14 +27,16 @@ export function createServer({ hostKeyPath }) {
     process.exit(1);
   }
   const hostKey = readFileSync(hostKeyPath);
+  let connectionCounter = 0;
   let sessionCounter = 0;
 
   const server = new Server({ hostKeys: [hostKey] }, (client, info) => {
     // info has { ip, family, port, header } for the remote peer; the local
     // (destination) address is read from the underlying socket below.
+    const connectionId = ++connectionCounter;
     let deviceId = null;
 
-    console.log(`[ssh] connection from ${info.ip}:${info.port}`);
+    console.log(`[ssh] connection conn=${connectionId} from ${info.ip}:${info.port}`);
 
     client.on('authentication', (ctx) => {
       // Shared credentials: accept any password/none. Identity is the dest IP,
@@ -49,7 +51,7 @@ export function createServer({ hostKeyPath }) {
       const localAddress = sock ? sock.localAddress : '0.0.0.0';
       deviceId = resolveDeviceId({ localAddress });
 
-      console.log(`[ssh] ready  src=${info.ip}:${info.port} dst=${localAddress} device=${deviceId}`);
+      console.log(`[ssh] ready conn=${connectionId} src=${info.ip}:${info.port} dst=${localAddress} device=${deviceId}`);
 
       client.on('session', (accept) => {
         const session = accept();
@@ -61,16 +63,25 @@ export function createServer({ hostKeyPath }) {
           const stream = accept2();
           const device = deriveDevice(deviceId);
           sessionCounter += 1;
+          console.log(`[ssh] session start conn=${connectionId} session=${sessionCounter} device=${deviceId}`);
           startSession(stream, device, sessionCounter);
         });
       });
     });
 
     client.on('close', () => {
-      console.log(`[ssh] disconnected src=${info.ip}:${info.port} device=${deviceId ?? 'unknown'}`);
+      console.log(`[ssh] disconnected conn=${connectionId} src=${info.ip}:${info.port} device=${deviceId ?? 'unknown'}`);
     });
 
-    client.on('error', () => { /* peer reset; no per-connection state to clean */ });
+    client.on('error', (err) => {
+      console.error(
+        `[ssh] connection error conn=${connectionId} src=${info.ip}:${info.port} device=${deviceId ?? 'unknown'} message=${err.message}`,
+      );
+    });
+  });
+
+  server.on('error', (err) => {
+    console.error(`[ssh] server error: ${err.message}`);
   });
 
   return server;
