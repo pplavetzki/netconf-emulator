@@ -66,3 +66,8 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+
+## 5. Confirm Before Taking Action
+
+After brainstorming, before coding or making any changes, confirm that the requestor is ready for you to proceed. This avoids wasted effort and ensures alignment.

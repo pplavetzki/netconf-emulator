@@ -53,3 +53,7 @@ For multi-step tasks, use:
 3. [Step] -> verify: [check]
 
 Strong success criteria allow independent, reliable execution.
+
+## 5. Confirm Before Taking Action
+
+After brainstorming, before coding or making any changes, confirm that the requestor is ready for you to proceed. This avoids wasted effort and ensures alignment.
