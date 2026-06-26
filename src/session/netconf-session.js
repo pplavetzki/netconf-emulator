@@ -121,12 +121,20 @@ export function startSession(stream, device, sessionId, opts = {}) {
 
   stream.on('data', (chunk) => {
     buffer += chunk.toString('utf8');
-    const { messages, rest } = splitMessages(buffer);
+    const { messages, modes, rest } = splitMessages(buffer);
     buffer = rest;
 
-    for (const msg of messages) {
+    for (let i = 0; i < messages.length; i += 1) {
+      const msg = messages[i];
+      const parseMode = modes[i] || 'unknown';
       const trimmed = msg.trim();
       if (trimmed.length === 0) continue;
+
+      if (isDebug()) {
+        console.debug(
+          `[netconf] sid=${sid} parse mode=${parseMode} device=${device.id} payload="${snippet(trimmed)}"`,
+        );
+      }
 
       // Ignore the client's <hello>; we've already advertised ours.
       if (trimmed.includes('<hello')) continue;
