@@ -3,4 +3,5 @@ node_modules/
 keys/
 
 rpc-map.txt
+rpc-output.txt
 mock_responses/

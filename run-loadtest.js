@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import ssh2 from 'ssh2';
 import { performance } from 'node:perf_hooks';
 import os from 'node:os';
+import { logError, logInfo } from './src/log.js';
 
 const { Client } = ssh2;
 
@@ -72,21 +73,34 @@ async function loadTest() {
   const wall = (performance.now() - wallStart) / 1000;
   const pct = (arr, p) => { const s = [...arr].sort((a, b) => a - b); return s[Math.floor(s.length * p)] || 0; };
   const totals = results.map((r) => r.total), hs = results.map((r) => r.handshake);
-  console.log(`\n=== results (cores=${os.cpus().length}) ===`);
-  console.log(`concurrency=${CONCURRENCY} conns=${TOTAL_CONNS} gets/conn=${GETS_PER_CONN}`);
-  console.log(`completed:        ${results.length}/${TOTAL_CONNS}  errors: ${errors.length}`);
-  if (errors.length) console.log(`errs:             ${[...new Set(errors)].slice(0,2).join(' | ')}`);
-  console.log(`wall:             ${wall.toFixed(2)}s`);
-  console.log(`conn throughput:  ${(results.length / wall).toFixed(1)} conn/s`);
-  console.log(`rpc throughput:   ${((results.length * GETS_PER_CONN) / wall).toFixed(0)} rpc/s`);
-  console.log(`conn total  p50/p95/p99: ${pct(totals,.5).toFixed(0)}/${pct(totals,.95).toFixed(0)}/${pct(totals,.99).toFixed(0)} ms`);
-  console.log(`handshake   p50/p95/p99: ${pct(hs,.5).toFixed(0)}/${pct(hs,.95).toFixed(0)}/${pct(hs,.99).toFixed(0)} ms`);
+  logInfo('loadtest', 'results', {
+    cores: os.cpus().length,
+    concurrency: CONCURRENCY,
+    conns: TOTAL_CONNS,
+    getsPerConn: GETS_PER_CONN,
+    completed: results.length,
+    errors: errors.length,
+    errorSample: errors.length ? [...new Set(errors)].slice(0, 2).join(' | ') : undefined,
+    wallSeconds: Number(wall.toFixed(2)),
+    connPerSec: Number((results.length / wall).toFixed(1)),
+    rpcPerSec: Number((((results.length * GETS_PER_CONN) / wall).toFixed(0))),
+    connTotalMs: {
+      p50: Number(pct(totals, 0.5).toFixed(0)),
+      p95: Number(pct(totals, 0.95).toFixed(0)),
+      p99: Number(pct(totals, 0.99).toFixed(0)),
+    },
+    handshakeMs: {
+      p50: Number(pct(hs, 0.5).toFixed(0)),
+      p95: Number(pct(hs, 0.95).toFixed(0)),
+      p99: Number(pct(hs, 0.99).toFixed(0)),
+    },
+  });
 }
 
 import net from 'node:net';
 
 const srv = spawn('node', ['src/index.js'], { env: { ...process.env, PORT: String(PORT), HOST: '127.0.0.1' }, stdio: ['ignore', 'pipe', 'pipe'] });
-srv.stderr.on('data', (d) => console.error('srv:', d.toString()));
+srv.stderr.on('data', (d) => logError('loadtest', 'server stderr', { stderr: d.toString().trim() }));
 
 function probe() {
   return new Promise((resolve) => {
@@ -107,8 +121,8 @@ async function waitUp(deadlineMs) {
 
 (async () => {
   const ok = await waitUp(10000);
-  if (!ok) { console.error('server did not start in time'); srv.kill('SIGKILL'); process.exit(1); }
-  try { await loadTest(); } catch (e) { console.error('loadtest error:', e); }
+  if (!ok) { logError('loadtest', 'server did not start in time'); srv.kill('SIGKILL'); process.exit(1); }
+  try { await loadTest(); } catch (e) { logError('loadtest', 'loadtest error', { error: e?.message || String(e) }); }
   srv.kill('SIGKILL');
   process.exit(0);
 })();

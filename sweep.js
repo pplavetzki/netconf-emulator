@@ -3,6 +3,7 @@ import net from 'node:net';
 import os from 'node:os';
 import ssh2 from 'ssh2';
 import { performance } from 'node:perf_hooks';
+import { logInfo, logWarn } from './src/log.js';
 
 const { Client } = ssh2;
 
@@ -97,10 +98,14 @@ function startCluster(workers, port) {
 }
 
 async function main() {
-  console.log(`\nScaling sweep on ${os.cpus().length}-core host`);
-  console.log(`UV_THREADPOOL_SIZE=${THREADPOOL}  concurrency=${CONCURRENCY}  conns=${TOTAL_CONNS}  gets/conn=${GETS_PER_CONN}\n`);
-  console.log('workers |  conn/s |   rpc/s | hs p50 | hs p99 |  wall | errors');
-  console.log('--------+---------+---------+--------+--------+-------+-------');
+  logInfo('sweep', 'starting scaling sweep', {
+    cores: os.cpus().length,
+    threadpool: THREADPOOL,
+    concurrency: CONCURRENCY,
+    conns: TOTAL_CONNS,
+    getsPerConn: GETS_PER_CONN,
+    workerCounts: WORKER_COUNTS,
+  });
 
   const rows = [];
   for (const w of WORKER_COUNTS) {
@@ -109,16 +114,28 @@ async function main() {
     let stderr = '';
     srv.stderr.on('data', (d) => { stderr += d.toString(); });
     const up = await waitUp(port, 15000);
-    if (!up) { console.log(`${String(w).padStart(7)} | server failed to start: ${stderr.slice(0,120)}`); srv.kill('SIGKILL'); continue; }
+    if (!up) {
+      logWarn('sweep', 'server failed to start', {
+        workers: w,
+        stderr: stderr.slice(0, 120),
+      });
+      srv.kill('SIGKILL');
+      continue;
+    }
     // small settle so all workers are accepting
     await new Promise((r) => setTimeout(r, 500));
     const res = await loadTest(port);
     rows.push({ w, ...res });
-    console.log(
-      `${String(w).padStart(7)} | ${res.connPerSec.toFixed(0).padStart(7)} | ${res.rpcPerSec.toFixed(0).padStart(7)} | ` +
-      `${res.hsP50.toFixed(0).padStart(6)} | ${res.hsP99.toFixed(0).padStart(6)} | ${res.wall.toFixed(1).padStart(5)} | ${res.errors}` +
-      (res.sample ? `  (${res.sample})` : '')
-    );
+    logInfo('sweep', 'worker run result', {
+      workers: w,
+      connPerSec: Number(res.connPerSec.toFixed(0)),
+      rpcPerSec: Number(res.rpcPerSec.toFixed(0)),
+      hsP50Ms: Number(res.hsP50.toFixed(0)),
+      hsP99Ms: Number(res.hsP99.toFixed(0)),
+      wallSeconds: Number(res.wall.toFixed(1)),
+      errors: res.errors,
+      errorSample: res.sample,
+    });
     srv.kill('SIGKILL');
     await new Promise((r) => setTimeout(r, 800)); // let port free
   }
@@ -126,10 +143,15 @@ async function main() {
   // scaling summary
   if (rows.length > 1) {
     const base = rows[0].rpcPerSec;
-    console.log('\nscaling vs 1 worker:');
-    for (const r of rows) console.log(`  ${r.w}w: ${(r.rpcPerSec / base).toFixed(2)}x`);
-    console.log('\n(Linear-ish climb then flattening = core-bound, which is what you want to see.');
-    console.log(' The flattening point is roughly your usable core count for this workload.)');
+    for (const r of rows) {
+      logInfo('sweep', 'scaling vs 1 worker', {
+        workers: r.w,
+        scale: Number((r.rpcPerSec / base).toFixed(2)),
+      });
+    }
+    logInfo('sweep', 'scaling note', {
+      note: 'Linear-ish climb then flattening indicates core-bound behavior; flattening point is usable core count for this workload.',
+    });
   }
   process.exit(0);
 }

@@ -1,6 +1,7 @@
 import { splitMessages, frame } from './framing.js';
 import { rpcReply, rpcError } from './envelope.js';
 import { dispatch } from '../handlers/dispatch.js';
+import { logDebug, logWarn } from '../log.js';
 
 // Reply-ordering behavior.
 //   deterministic (default): render and write each reply immediately in receipt
@@ -51,7 +52,7 @@ function snippet(xml, max = 200) {
 }
 
 function shouldLogWarn() {
-  return LOG_LEVEL === 'warn' || LOG_LEVEL === 'debug';
+  return LOG_LEVEL === 'warn' || LOG_LEVEL === 'info' || LOG_LEVEL === 'debug';
 }
 
 function isDebug() {
@@ -82,21 +83,33 @@ export function startSession(stream, device, sessionId, opts = {}) {
     try {
       const reply = rpcReply(messageId, dispatch(operation, device, requestXml));
       if (isDebug()) {
-        console.debug(
-          `[netconf] sid=${sid} rpc out device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} status=ok`,
-        );
+        logDebug('netconf', 'rpc out', {
+          sid,
+          device: device.id,
+          messageId: messageId ?? 'missing',
+          operation: operation ?? 'missing',
+          status: 'ok',
+        });
       }
       return reply;
     } catch (err) {
       if (err?.code === 'UNKNOWN_RPC' && shouldLogWarn()) {
-        console.warn(
-          `[netconf] sid=${sid} unknown operation device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'}`,
-        );
+        logWarn('netconf', 'unknown operation', {
+          sid,
+          device: device.id,
+          messageId: messageId ?? 'missing',
+          operation: operation ?? 'missing',
+        });
       }
       if (isDebug()) {
-        console.debug(
-          `[netconf] sid=${sid} rpc out device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} status=error message="${err.message}"`,
-        );
+        logDebug('netconf', 'rpc out', {
+          sid,
+          device: device.id,
+          messageId: messageId ?? 'missing',
+          operation: operation ?? 'missing',
+          status: 'error',
+          error: err.message,
+        });
       }
       return rpcError(messageId, err.message);
     }
@@ -131,9 +144,12 @@ export function startSession(stream, device, sessionId, opts = {}) {
       if (trimmed.length === 0) continue;
 
       if (isDebug()) {
-        console.debug(
-          `[netconf] sid=${sid} parse mode=${parseMode} device=${device.id} payload="${snippet(trimmed)}"`,
-        );
+        logDebug('netconf', 'parse', {
+          sid,
+          mode: parseMode,
+          device: device.id,
+          payload: snippet(trimmed),
+        });
       }
 
       // Ignore the client's <hello>; we've already advertised ours.
@@ -143,15 +159,23 @@ export function startSession(stream, device, sessionId, opts = {}) {
       if (trimmed.includes('<close-session')) {
         const { messageId } = parseRpc(trimmed);
         if (isDebug()) {
-          console.debug(
-            `[netconf] sid=${sid} rpc in device=${device.id} message-id=${messageId ?? 'missing'} operation=close-session payload="${snippet(trimmed)}"`,
-          );
+          logDebug('netconf', 'rpc in', {
+            sid,
+            device: device.id,
+            messageId: messageId ?? 'missing',
+            operation: 'close-session',
+            payload: snippet(trimmed),
+          });
         }
         emit(rpcReply(messageId, '<ok/>'));
         if (isDebug()) {
-          console.debug(
-            `[netconf] sid=${sid} rpc out device=${device.id} message-id=${messageId ?? 'missing'} operation=close-session status=ok`,
-          );
+          logDebug('netconf', 'rpc out', {
+            sid,
+            device: device.id,
+            messageId: messageId ?? 'missing',
+            operation: 'close-session',
+            status: 'ok',
+          });
         }
         closeRequested = true;
         // In deterministic mode there are no pending replies, so end now.
@@ -161,14 +185,22 @@ export function startSession(stream, device, sessionId, opts = {}) {
 
       const { messageId, operation } = parseRpc(trimmed);
       if (isDebug()) {
-        console.debug(
-          `[netconf] sid=${sid} rpc in device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} payload="${snippet(trimmed)}"`,
-        );
+        logDebug('netconf', 'rpc in', {
+          sid,
+          device: device.id,
+          messageId: messageId ?? 'missing',
+          operation: operation ?? 'missing',
+          payload: snippet(trimmed),
+        });
       }
       if ((!messageId || !operation) && shouldLogWarn()) {
-        console.warn(
-          `[netconf] sid=${sid} malformed rpc device=${device.id} message-id=${messageId ?? 'missing'} operation=${operation ?? 'missing'} payload="${snippet(trimmed)}"`,
-        );
+        logWarn('netconf', 'malformed rpc', {
+          sid,
+          device: device.id,
+          messageId: messageId ?? 'missing',
+          operation: operation ?? 'missing',
+          payload: snippet(trimmed),
+        });
       }
       emit(render(messageId, operation, trimmed));
     }

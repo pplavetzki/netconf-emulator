@@ -1,4 +1,5 @@
 import ssh2 from 'ssh2';
+import { logError, logInfo } from './src/log.js';
 
 // Usage:
 //   node cli.js [--host H] [--port P] [--user U] [--pass X]
@@ -66,7 +67,10 @@ const rpcXml = (op, id) =>
 const conn = new Client();
 conn.on('ready', () => {
   conn.subsys('netconf', (err, stream) => {
-    if (err) { console.error('subsystem error:', err.message); process.exit(1); }
+    if (err) {
+      logError('cli', 'subsystem error', { error: err.message });
+      process.exit(1);
+    }
     let buf = '';
     let sent = 0;
     let received = 0;
@@ -104,9 +108,17 @@ conn.on('ready', () => {
           if (MODE === 'sequential') sendOne();
           if (received >= RPCS.length) {
             const ms = Date.now() - t0;
-            console.log(`mode=${MODE} sent=${sent} received=${received} in ${ms}ms`);
-            console.log(`reply message-ids (arrival order): ${replyIds.join(', ')}  (trailing ! = rpc-error)`);
-            console.log(`\n--- first reply payload ---\n${firstReply}`);
+            logInfo('cli', 'rpc run complete', {
+              mode: MODE,
+              sent,
+              received,
+              durationMs: ms,
+            });
+            logInfo('cli', 'reply ids in arrival order', {
+              replyIds,
+              rpcErrorSuffix: '!',
+            });
+            logInfo('cli', 'first reply payload', { payload: firstReply });
             conn.end();
           }
         }
@@ -116,5 +128,8 @@ conn.on('ready', () => {
     stream.write(HELLO + '\n' + EOM + '\n');
   });
 });
-conn.on('error', (e) => { console.error('connection error:', e.message); process.exit(1); });
+conn.on('error', (e) => {
+  logError('cli', 'connection error', { error: e.message });
+  process.exit(1);
+});
 conn.connect({ host: HOST, port: PORT, username: USER, password: PASS, readyTimeout: 15000 });

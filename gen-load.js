@@ -1,6 +1,7 @@
 import ssh2 from 'ssh2';
 import { performance } from 'node:perf_hooks';
 import os from 'node:os';
+import { logInfo } from './src/log.js';
 
 // Load generator for an ALREADY-RUNNING emulator. Does NOT start a server.
 // Point it at a host/port (local or remote) and it ramps concurrent clients,
@@ -79,8 +80,17 @@ function runConnection() {
 }
 
 async function main() {
-  console.log(`load gen -> ${HOST}:${PORT}  (this box: ${os.hostname()}, ${os.cpus().length} cores)`);
-  console.log(`concurrency=${CONCURRENCY} conns=${TOTAL_CONNS} gets/conn=${GETS_PER_CONN} (${MODE}) rpc=${RPC_OP}\n`);
+  logInfo('gen-load', 'starting load generation', {
+    host: HOST,
+    port: PORT,
+    hostname: os.hostname(),
+    cores: os.cpus().length,
+    concurrency: CONCURRENCY,
+    conns: TOTAL_CONNS,
+    getsPerConn: GETS_PER_CONN,
+    mode: MODE,
+    rpc: RPC_OP,
+  });
 
   const results = [], errors = [];
   let launched = 0, active = 0;
@@ -106,15 +116,25 @@ async function main() {
   const wall = (performance.now() - wallStart) / 1000;
   const pct = (arr, p) => { const s = [...arr].sort((a, b) => a - b); return s[Math.floor(s.length * p)] || 0; };
   const totals = results.map((r) => r.total), hs = results.map((r) => r.handshake);
-
-  console.log('=== results ===');
-  console.log(`completed:        ${results.length}/${TOTAL_CONNS}  errors: ${errors.length}`);
-  if (errors.length) console.log(`err sample:       ${[...new Set(errors)].slice(0,3).join(' | ')}`);
-  console.log(`wall:             ${wall.toFixed(2)}s`);
-  console.log(`conn throughput:  ${(results.length / wall).toFixed(1)} conn/s`);
-  console.log(`rpc throughput:   ${((results.length * GETS_PER_CONN) / wall).toFixed(0)} rpc/s`);
-  console.log(`conn total  p50/p95/p99: ${pct(totals,.5).toFixed(0)}/${pct(totals,.95).toFixed(0)}/${pct(totals,.99).toFixed(0)} ms`);
-  console.log(`handshake   p50/p95/p99: ${pct(hs,.5).toFixed(0)}/${pct(hs,.95).toFixed(0)}/${pct(hs,.99).toFixed(0)} ms`);
+  logInfo('gen-load', 'results', {
+    completed: results.length,
+    totalConns: TOTAL_CONNS,
+    errors: errors.length,
+    errorSample: errors.length ? [...new Set(errors)].slice(0, 3).join(' | ') : undefined,
+    wallSeconds: Number(wall.toFixed(2)),
+    connPerSec: Number((results.length / wall).toFixed(1)),
+    rpcPerSec: Number((((results.length * GETS_PER_CONN) / wall).toFixed(0))),
+    connTotalMs: {
+      p50: Number(pct(totals, 0.5).toFixed(0)),
+      p95: Number(pct(totals, 0.95).toFixed(0)),
+      p99: Number(pct(totals, 0.99).toFixed(0)),
+    },
+    handshakeMs: {
+      p50: Number(pct(hs, 0.5).toFixed(0)),
+      p95: Number(pct(hs, 0.95).toFixed(0)),
+      p99: Number(pct(hs, 0.99).toFixed(0)),
+    },
+  });
   process.exit(0);
 }
 

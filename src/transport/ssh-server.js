@@ -2,6 +2,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import ssh2 from 'ssh2';
 import { deriveDevice } from '../registry/device.js';
 import { startSession } from '../session/netconf-session.js';
+import { logError, logInfo } from '../log.js';
 
 const { Server } = ssh2;
 
@@ -22,8 +23,10 @@ function resolveDeviceId(info) {
 
 export function createServer({ hostKeyPath }) {
   if (!existsSync(hostKeyPath)) {
-    console.error(`Error: host key not found at ${hostKeyPath}`);
-    console.error(`Generate it with:\n\n  ssh-keygen -t rsa -b 2048 -m PEM -f ${hostKeyPath} -N ""\n`);
+    logError('ssh', 'host key not found', { hostKeyPath });
+    logError('ssh', 'generate host key', {
+      command: `ssh-keygen -t rsa -b 2048 -m PEM -f ${hostKeyPath} -N ""`,
+    });
     process.exit(1);
   }
   const hostKey = readFileSync(hostKeyPath);
@@ -36,7 +39,10 @@ export function createServer({ hostKeyPath }) {
     const connectionId = ++connectionCounter;
     let deviceId = null;
 
-    console.log(`[ssh] connection conn=${connectionId} from ${info.ip}:${info.port}`);
+    logInfo('ssh', 'connection', {
+      connectionId,
+      src: `${info.ip}:${info.port}`,
+    });
 
     client.on('authentication', (ctx) => {
       // Shared credentials: accept any password/none. Identity is the dest IP,
@@ -51,7 +57,12 @@ export function createServer({ hostKeyPath }) {
       const localAddress = sock ? sock.localAddress : '0.0.0.0';
       deviceId = resolveDeviceId({ localAddress });
 
-      console.log(`[ssh] ready conn=${connectionId} src=${info.ip}:${info.port} dst=${localAddress} device=${deviceId}`);
+      logInfo('ssh', 'ready', {
+        connectionId,
+        src: `${info.ip}:${info.port}`,
+        dst: localAddress,
+        device: deviceId,
+      });
 
       client.on('session', (accept) => {
         const session = accept();
@@ -63,25 +74,36 @@ export function createServer({ hostKeyPath }) {
           const stream = accept2();
           const device = deriveDevice(deviceId);
           sessionCounter += 1;
-          console.log(`[ssh] session start conn=${connectionId} session=${sessionCounter} device=${deviceId}`);
+          logInfo('ssh', 'session start', {
+            connectionId,
+            session: sessionCounter,
+            device: deviceId,
+          });
           startSession(stream, device, sessionCounter);
         });
       });
     });
 
     client.on('close', () => {
-      console.log(`[ssh] disconnected conn=${connectionId} src=${info.ip}:${info.port} device=${deviceId ?? 'unknown'}`);
+      logInfo('ssh', 'disconnected', {
+        connectionId,
+        src: `${info.ip}:${info.port}`,
+        device: deviceId ?? 'unknown',
+      });
     });
 
     client.on('error', (err) => {
-      console.error(
-        `[ssh] connection error conn=${connectionId} src=${info.ip}:${info.port} device=${deviceId ?? 'unknown'} message=${err.message}`,
-      );
+      logError('ssh', 'connection error', {
+        connectionId,
+        src: `${info.ip}:${info.port}`,
+        device: deviceId ?? 'unknown',
+        error: err.message,
+      });
     });
   });
 
   server.on('error', (err) => {
-    console.error(`[ssh] server error: ${err.message}`);
+    logError('ssh', 'server error', { error: err.message });
   });
 
   return server;

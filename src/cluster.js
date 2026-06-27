@@ -1,6 +1,7 @@
 import cluster from 'node:cluster';
 import os from 'node:os';
 import { createServer } from './transport/ssh-server.js';
+import { logError, logInfo } from './log.js';
 
 const PORT = Number(process.env.PORT || 8830);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -8,7 +9,13 @@ const HOST_KEY = process.env.HOST_KEY || 'keys/host_rsa';
 const WORKERS = Number(process.env.WORKERS || os.cpus().length);
 
 if (cluster.isPrimary) {
-  console.log(`primary ${process.pid}: forking ${WORKERS} workers on ${HOST}:${PORT} (${os.cpus().length} cores)`);
+  logInfo('cluster', 'forking workers', {
+    pid: process.pid,
+    workers: WORKERS,
+    host: HOST,
+    port: PORT,
+    cores: os.cpus().length,
+  });
   // Round-robin connection distribution (default on non-Windows). Each worker
   // gets its own event loop; the OS hands accepted connections to workers.
   cluster.schedulingPolicy = cluster.SCHED_RR;
@@ -18,32 +25,41 @@ if (cluster.isPrimary) {
   let ready = 0;
   cluster.on('message', (_w, msg) => {
     if (msg === 'listening' && ++ready === WORKERS) {
-      console.log(`all ${WORKERS} workers listening`);
+      logInfo('cluster', 'all workers listening', { workers: WORKERS });
     }
   });
   let shuttingDown = false;
 
   cluster.on('exit', (worker, code, signal) => {
     if (shuttingDown) {
-      console.log(`[primary] worker ${worker.process.pid} exited (${signal || code})`);
+      logInfo('cluster', 'worker exited during shutdown', {
+        workerPid: worker.process.pid,
+        exit: signal || code,
+      });
       if (Object.keys(cluster.workers).length === 0) {
-        console.log('[primary] all workers stopped');
+        logInfo('cluster', 'all workers stopped');
         process.exit(0);
       }
       return;
     }
     if (code === 1) {
-      console.error(`[primary] worker exited with fatal error; shutting down`);
+      logError('cluster', 'worker exited with fatal error; shutting down', {
+        workerPid: worker.process.pid,
+        exit: signal || code,
+      });
       process.exit(1);
     }
-    console.log(`worker ${worker.process.pid} exited (${signal || code}); refork`);
+    logInfo('cluster', 'worker exited; reforking', {
+      workerPid: worker.process.pid,
+      exit: signal || code,
+    });
     cluster.fork();
   });
 
   function shutdown() {
     if (shuttingDown) return;
     shuttingDown = true;
-    console.log('\n[primary] shutting down...');
+    logInfo('cluster', 'primary shutting down');
     for (const worker of Object.values(cluster.workers)) {
       worker.send('shutdown');
     }
@@ -59,9 +75,9 @@ if (cluster.isPrimary) {
 
   process.on('message', (msg) => {
     if (msg !== 'shutdown') return;
-    console.log(`[worker ${process.pid}] shutting down...`);
+    logInfo('cluster', 'worker shutting down', { workerPid: process.pid });
     server.close(() => {
-      console.log(`[worker ${process.pid}] closed`);
+      logInfo('cluster', 'worker closed', { workerPid: process.pid });
       process.exit(0);
     });
   });
