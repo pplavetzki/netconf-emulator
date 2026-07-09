@@ -36,6 +36,26 @@ WORKERS=8 UV_THREADPOOL_SIZE=8 npm run start:cluster
 # or: PORT=8830 WORKERS=8 UV_THREADPOOL_SIZE=8 node src/cluster.js
 ```
 
+External per-device XML overrides:
+```
+TEST_DATA_DIR=/var/lib/netconf-emulator/data npm start
+```
+
+Lookup order for each RPC reply:
+- external override: first file found in `<TEST_DATA_DIR>/<device-ip>/<rpc>/`
+- in-repo per-IP override: `mock_responses/<device-ip>/<mapped-file>.xml`
+- fallback default: `mock_responses/default/<mapped-file>.xml`
+
+`<device-ip>` matches the destination address dialed by the client (same value
+used to derive `device@<ip>` identity).
+
+Variant mapping examples:
+- `get-interface-information` + `<descriptions/>` -> `get-interface-information-descriptions`
+- `get-interface-information` + `<interface-name>lo0.0</interface-name>` -> `get-interface-information-terse-lo0.0`
+- `get-chassis-inventory` + `<extensive/>` -> `get-chassis-inventory-extensive`
+- `get-vrrp-information` -> `get-vrrp-information-detail`
+- `file-list` -> `file-list-detail-var-log`
+
 ## Load test
 Self-contained: spawns the server on a random port, ramps concurrent clients,
 each runs the full SSH+hello+20×GET+close sequence, reports latency/throughput.

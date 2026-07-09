@@ -1,0 +1,15 @@
+<fpc-information xmlns="http://xml.juniper.net/junos/19.4R0/junos-chassis" junos:style="brief">
+  <fpc>
+    <slot>0</slot>
+    <state>Online</state>
+    <temperature junos:celsius="0">N/A</temperature>
+    <cpu-total>12</cpu-total>
+    <cpu-interrupt>0</cpu-interrupt>
+    <cpu-1min-avg>13</cpu-1min-avg>
+    <cpu-5min-avg>13</cpu-5min-avg>
+    <cpu-15min-avg>13</cpu-15min-avg>
+    <memory-dram-size>3168</memory-dram-size>
+    <memory-heap-utilization>7</memory-heap-utilization>
+    <memory-buffer-utilization>9</memory-buffer-utilization>
+  </fpc>
+</fpc-information>

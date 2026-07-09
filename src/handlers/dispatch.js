@@ -1,4 +1,5 @@
 import * as templates from '../templates/index.js';
+import { resolvePayloadFromXml } from './payload-resolver.js';
 
 // One entry per supported RPC. The key is the operation element name as it
 // appears inside <rpc>.
@@ -42,13 +43,18 @@ const HANDLERS = {
 };
 
 export function dispatch(operation, device, requestXml = '') {
-  const handler = HANDLERS[operation];
-  if (!handler) {
+  if (!HANDLERS[operation]) {
     const err = new Error(`unsupported operation: ${operation}`);
     err.code = 'UNKNOWN_RPC';
     throw err;
   }
-  return handler(device, requestXml);
+
+  const xmlPayload = resolvePayloadFromXml(operation, device, requestXml);
+  if (xmlPayload != null) return xmlPayload;
+
+  const err = new Error(`no XML payload found for operation: ${operation}`);
+  err.code = 'MISSING_MOCK_PAYLOAD';
+  throw err;
 }
 
 export function supportedOperations() {
