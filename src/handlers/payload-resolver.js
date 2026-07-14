@@ -10,6 +10,8 @@ const EXTERNAL_DIR = process.env.TEST_DATA_DIR || '';
 export function resolvePayloadFromXml(operation, device, requestXml = '') {
   const target = resolveTarget(operation, requestXml);
   if (!target) return null;
+  const inRepoFileCandidates = target.inRepoFileCandidates || [target.defaultFile];
+  const defaultFileCandidates = target.defaultFileCandidates || [target.defaultFile];
 
   const address = deviceAddress(device);
   if (EXTERNAL_DIR && address && isSafeSegment(address)) {
@@ -23,17 +25,22 @@ export function resolvePayloadFromXml(operation, device, requestXml = '') {
   }
 
   if (address && isSafeSegment(address)) {
-    const inRepoIpPath = join(MOCK_RESPONSES_DIR, address, target.defaultFile);
-    if (existsSync(inRepoIpPath)) {
+    for (const fileName of inRepoFileCandidates) {
+      const inRepoIpPath = join(MOCK_RESPONSES_DIR, address, fileName);
+      if (!existsSync(inRepoIpPath)) continue;
       const xml = readFileSync(inRepoIpPath, 'utf8');
       return renderDevicePayload(xml, device);
     }
   }
 
-  const defaultPath = join(DEFAULT_DIR, target.defaultFile);
-  if (!existsSync(defaultPath)) return null;
-  const xml = readFileSync(defaultPath, 'utf8');
-  return renderDevicePayload(xml, device);
+  for (const fileName of defaultFileCandidates) {
+    const defaultPath = join(DEFAULT_DIR, fileName);
+    if (!existsSync(defaultPath)) continue;
+    const xml = readFileSync(defaultPath, 'utf8');
+    return renderDevicePayload(xml, device);
+  }
+
+  return null;
 }
 
 function resolveTarget(operation, requestXml) {
@@ -70,6 +77,24 @@ function resolveTarget(operation, requestXml) {
         externalKeys: ['get-interface-information-terse-lo0.0', 'get-interface-information'],
       };
     }
+
+    const wildcardPrefix = extractInterfaceWildcardPrefix(requestXml);
+    if (wildcardPrefix && isSafeSegment(wildcardPrefix)) {
+      return {
+        defaultFile: 'get-interface-information-terse.xml',
+        inRepoFileCandidates: [
+          `get-interface-information-terse-${wildcardPrefix}.xml`,
+        ],
+        defaultFileCandidates: [
+          `get-interface-information-terse-${wildcardPrefix}.xml`,
+          'get-interface-information-terse.xml',
+        ],
+        externalKeys: [
+          `get-interface-information-terse-${wildcardPrefix}`,
+        ],
+      };
+    }
+
     return {
       defaultFile: 'get-interface-information-terse.xml',
       externalKeys: ['get-interface-information-terse', 'get-interface-information'],
@@ -112,6 +137,12 @@ function hasTagValue(xml, tag, value) {
   const escapedValue = escapeRegExp(value);
   const re = new RegExp(`<${escapedTag}>\\s*${escapedValue}\\s*<\\/${escapedTag}>`, 'i');
   return re.test(xml);
+}
+
+function extractInterfaceWildcardPrefix(xml) {
+  const re = /<interface-name>\s*([A-Za-z0-9._:-]+)\*\s*<\/interface-name>/i;
+  const match = re.exec(xml);
+  return match ? match[1] : null;
 }
 
 function escapeRegExp(text) {
