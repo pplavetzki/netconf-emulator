@@ -36,25 +36,55 @@ WORKERS=8 UV_THREADPOOL_SIZE=8 npm run start:cluster
 # or: PORT=8830 WORKERS=8 UV_THREADPOOL_SIZE=8 node src/cluster.js
 ```
 
+## Per-device XML overrides & reply resolution
+
 External per-device XML overrides:
 ```
 TEST_DATA_DIR=/var/lib/netconf-emulator/data npm start
 ```
 
-Lookup order for each RPC reply:
-- external override: first file found in `<TEST_DATA_DIR>/<device-ip>/<rpc>/`
-- in-repo per-IP override: `mock_responses/<device-ip>/<mapped-file>.xml`
-- fallback default: `mock_responses/default/<mapped-file>.xml`
+### ⚠️ Reply resolution order (IMPORTANT — read this first)
 
-`<device-ip>` matches the destination address dialed by the client (same value
-used to derive `device@<ip>` identity).
+**This is the single most important thing to understand about the emulator.**
+For every RPC reply, the server resolves the payload by walking the sources
+below **in order** and using the **first match it finds**. A higher source
+always wins over a lower one:
 
-Variant mapping examples:
-- `get-interface-information` + `<descriptions/>` -> `get-interface-information-descriptions`
-- `get-interface-information` + `<interface-name>lo0.0</interface-name>` -> `get-interface-information-terse-lo0.0`
-- `get-chassis-inventory` + `<extensive/>` -> `get-chassis-inventory-extensive`
-- `get-vrrp-information` -> `get-vrrp-information-detail`
-- `file-list` -> `file-list-detail-var-log`
+1. **External override** (highest priority) — first file found in
+   `<TEST_DATA_DIR>/<device-ip>/<rpc>/`
+2. **In-repo per-IP override** — `mock_responses/<device-ip>/<mapped-file>.xml`
+3. **Default fallback** (lowest priority) — `mock_responses/default/<mapped-file>.xml`
+
+> **Why this matters:** if a reply looks wrong or "stale," check the sources
+> **top-down** — a leftover external override or a per-IP file will silently
+> shadow the default. The default is only used when nothing above it matches.
+
+`<device-ip>` is the **destination address the client dialed**
+(`socket.localAddress`) — the same value used to derive the `device@<ip>`
+identity. It is *not* the client's source address.
+
+### Naming convention for `<mapped-file>`
+
+The `<mapped-file>` name is derived from the RPC, following a consistent pattern:
+
+```
+<rpc-name>[-<variant-suffix>]
+```
+
+- **Base RPC:** the RPC operation name maps directly to a file of the same name
+  (e.g. `get-alarm-information` → `get-alarm-information`).
+- **Variant suffix:** when an RPC has multiple forms, a suffix describing the
+  request argument (or a fixed default variant) is appended.
+
+| RPC request | Matched condition | Resolves to `<mapped-file>` |
+|---|---|---|
+| `get-interface-information` | `<descriptions/>` present | `get-interface-information-descriptions` |
+| `get-interface-information` | `<interface-name>lo0.0</interface-name>` | `get-interface-information-terse-lo0.0` |
+| `get-interface-information` | (default) | `get-interface-information-terse` |
+| `get-chassis-inventory` | `<extensive/>` present | `get-chassis-inventory-extensive` |
+| `get-chassis-inventory` | (default) | `chassis-inventory` |
+| `get-vrrp-information` | (always) | `get-vrrp-information-detail` |
+| `file-list` | (always) | `file-list-detail-var-log` |
 
 ## Load test
 Self-contained: spawns the server on a random port, ramps concurrent clients,
@@ -124,5 +154,3 @@ REPLY_MODE=reorder npm start
 
 node cli.js --mode pipelined
 
-# on the generator box, with Node installed and gen-load.js present:
-HOST=<emulator-ip> PORT=8830 MODE=sequential CONCURRENCY=200 CONNS=2000 GETS=10 node gen-load.js
